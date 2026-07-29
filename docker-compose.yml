@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: music-catalog-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: music_catalog
+      POSTGRES_USER: music_admin
+      POSTGRES_PASSWORD: changeme_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
