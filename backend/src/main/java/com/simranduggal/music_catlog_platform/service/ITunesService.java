@@ -1,42 +1,31 @@
 package com.simranduggal.music_catlog_platform.service;
 
-import com.simranduggal.music_catlog_platform.dto.ITunesSearchResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ITunesService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ITunesService.class);
+    private final RestTemplate restTemplate;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    @Value("${itunes.api.base-url}")
+    private String baseUrl;
 
-    public ITunesSearchResponse search(String query, String type) {
+    public String search(String query, String type) {
 
-        logger.info("Searching iTunes | Query: {} | Type: {}", query, type);
-
-        String entity = switch (type.toLowerCase()) {
-            case "album" -> "album";
-            case "song" -> "song";
-            case "artist" -> "musicArtist";
-            default -> "album";
-        };
-
-        String url = UriComponentsBuilder
-                .fromUriString("https://itunes.apple.com/search")
+        String url = UriComponentsBuilder.fromUriString(baseUrl)
                 .queryParam("term", query)
-                .queryParam("entity", entity)
-                .queryParam("limit", 25)
+                .queryParam("entity", type)
                 .toUriString();
 
-        ITunesSearchResponse response =
-                restTemplate.getForObject(url, ITunesSearchResponse.class);
+        log.info("Searching iTunes | Query: {} | Type: {}", query, type);
 
-        logger.info("Found {} result(s)", response != null ? response.getResultCount() : 0);
-
-        return response;
+        return restTemplate.getForObject(url, String.class);
     }
 }

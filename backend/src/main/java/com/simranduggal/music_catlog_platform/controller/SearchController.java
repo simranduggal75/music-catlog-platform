@@ -1,6 +1,6 @@
 package com.simranduggal.music_catlog_platform.controller;
 
-import com.simranduggal.music_catlog_platform.dto.ITunesSearchResponse;
+
 import com.simranduggal.music_catlog_platform.service.ITunesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +16,25 @@ public class SearchController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ITunesSearchResponse> search(
-            @RequestParam String query,
-            @RequestParam(defaultValue = "album") String type
-    ) {
+public ResponseEntity<String> search(
+        @RequestParam String query,
+        @RequestParam String type) {
 
-        return ResponseEntity.ok(
-                iTunesService.search(query, type)
-        );
+    if (query == null || query.isBlank()) {
+        return ResponseEntity.badRequest().body("Query cannot be empty.");
     }
+
+    switch (type.toLowerCase()) {
+        case "album":
+        case "song":
+        case "artist":
+        case "movie":
+            break;
+        default:
+            return ResponseEntity.badRequest().body("Invalid type. Allowed values: album, song, artist, movie.");
+    }
+
+    return ResponseEntity.ok(iTunesService.search(query, type));
+}
+
 }
