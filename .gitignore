@@ -1,1 +1,7 @@
 "target/\n.env\n*.class\nnode_modules/\n.next/" 
+# VS Code
+.vscode/
+
+# Postman
+.postman/
+postman/
