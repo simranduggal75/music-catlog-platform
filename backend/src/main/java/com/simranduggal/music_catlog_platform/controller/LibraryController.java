@@ -35,8 +35,8 @@ public ResponseEntity<Album> updateAlbum(
     return ResponseEntity.ok(albumService.updateAlbum(id, album));
 }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAlbum(@PathVariable Long id) {
-        albumService.deleteAlbum(id);
-        return ResponseEntity.ok("Album deleted successfully.");
-    }
+public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
+    albumService.deleteAlbum(id);
+    return ResponseEntity.noContent().build();
+}
 }

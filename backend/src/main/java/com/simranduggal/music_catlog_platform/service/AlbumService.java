@@ -41,6 +41,9 @@ public class AlbumService {
     }
 
     public void deleteAlbum(Long id) {
-        albumRepository.deleteById(id);
-    }
+    Album album = albumRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Album not found"));
+
+    albumRepository.delete(album);
 }
+    }
