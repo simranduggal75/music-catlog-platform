@@ -93,4 +93,4 @@ Please refer to the screenhots folder for all outputs and images
 
 ## Author
 
-Simran Duggal GitHub: https://github.com/simranduggal75
+Simran Duggal
