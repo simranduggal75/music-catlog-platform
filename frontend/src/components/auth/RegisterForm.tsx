@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
@@ -33,10 +35,15 @@ export default function RegisterForm() {
 
       saveToken(response.data.token);
 
-      router.push("/search");
+      toast.success("Registration successful");
+
+      router.push("/login");
     } catch (error) {
-      console.error("Registration failed:", error);
-      alert("Registration failed. Please try again.");
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Registration failed");
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
