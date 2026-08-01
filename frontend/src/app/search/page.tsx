@@ -1,7 +1,6 @@
 "use client";
 
 import SearchBar from "@/components/search/SearchBar";
-import EmptyState from "@/components/common/EmptyState";
 
 export default function SearchPage() {
   return (
@@ -18,14 +17,6 @@ export default function SearchPage() {
         </div>
 
         <SearchBar />
-
-        <div className="mt-10">
-          <h2 className="mb-6 text-2xl font-semibold">
-            Results
-          </h2>
-
-          <EmptyState />
-        </div>
       </div>
     </main>
   );
