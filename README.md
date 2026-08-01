@@ -89,18 +89,8 @@ from that genre.
 
 ## Screenshots
 
-(register.png)
-(login.png)
-(logout.png)
-(search.png)
-(search-song.png)
-(search-album.png)
-(search-artist.png)
-(add-to-library.png)
-(library.png)
-(dashboard&AI recommendation.png)
-(dashoboard-analytics.png)
-(Delete.png)
+Please refer to the screenhots folder for all outputs and images
+
 ## Author
 
 Simran Duggal GitHub: https://github.com/simranduggal75
