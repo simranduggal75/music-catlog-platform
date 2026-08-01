@@ -1,14 +1,15 @@
 export interface SearchResult {
-  trackId: number;
+  trackId?: number;
+  collectionId?: number;
+  artistId?: number;
+
   trackName?: string;
   collectionName?: string;
   artistName: string;
+
   artworkUrl100?: string;
   primaryGenreName?: string;
-  releaseDate?: string;
-}
 
-export interface ITunesResponse {
-  resultCount: number;
-  results: SearchResult[];
+  releaseDate?: string;
+  trackCount?: number;
 }
