@@ -1,24 +1,50 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
+
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 
+import { login } from "@/services/auth";
+import { saveToken } from "@/utils/storage";
+
 type LoginFormData = {
-  email: string;
+  username: string;
   password: string;
 };
 
 export default function LoginForm() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormData>();
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const response = await login({
+        username: data.username,
+        password: data.password,
+      });
+
+      saveToken(response.data.token);
+
+      toast.success("Login successful");
+
+      router.push("/search");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Login failed");
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
   };
 
   return (
@@ -29,12 +55,11 @@ export default function LoginForm() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
-          label="Email"
-          type="email"
-          placeholder="Enter your email"
-          error={errors.email?.message}
-          {...register("email", {
-            required: "Email is required",
+          label="Username"
+          placeholder="Enter your username"
+          error={errors.username?.message}
+          {...register("username", {
+            required: "Username is required",
           })}
         />
 
@@ -52,13 +77,13 @@ export default function LoginForm() {
           })}
         />
 
-        <Button type="submit">
-          Login
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Logging in..." : "Login"}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm">
-        Don't have an account?{" "}
+        Dont have an account?{" "}
         <Link
           href="/register"
           className="font-semibold text-blue-600 hover:underline"

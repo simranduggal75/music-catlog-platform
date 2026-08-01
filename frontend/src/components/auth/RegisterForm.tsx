@@ -1,97 +1,89 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
+
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 
-type RegisterFormData = {
-  username: string;
-  email: string;
-  password: string;
+import { register as registerUser } from "@/services/auth";
+import { saveToken } from "@/utils/storage";
+import { RegisterRequest } from "@/types/auth";
+
+type RegisterFormData = RegisterRequest & {
   confirmPassword: string;
 };
 
 export default function RegisterForm() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>();
 
-  const password = watch("password");
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      const response = await registerUser({
+        username: data.username,
+        password: data.password,
+      });
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log(data);
+      saveToken(response.data.token);
+
+      toast.success("Registration successful");
+
+      router.push("/login");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Registration failed");
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
   };
 
   return (
-    <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
-      <h1 className="mb-6 text-center text-3xl font-bold">
-        Create Account
-      </h1>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Input
+        label="Username"
+        {...register("username", {
+          required: "Username is required",
+        })}
+        error={errors.username?.message}
+      />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="Username"
-          placeholder="Enter username"
-          error={errors.username?.message}
-          {...register("username", {
-            required: "Username is required",
-          })}
-        />
+      <Input
+        label="Password"
+        type="password"
+        {...register("password", {
+          required: "Password is required",
+          minLength: {
+            value: 6,
+            message: "Password must be at least 6 characters",
+          },
+        })}
+        error={errors.password?.message}
+      />
 
-        <Input
-          label="Email"
-          type="email"
-          placeholder="Enter your email"
-          error={errors.email?.message}
-          {...register("email", {
-            required: "Email is required",
-          })}
-        />
+      <Input
+        label="Confirm Password"
+        type="password"
+        {...register("confirmPassword", {
+          required: "Please confirm your password",
+          validate: (value) =>
+            value === watch("password") || "Passwords do not match",
+        })}
+        error={errors.confirmPassword?.message}
+      />
 
-        <Input
-          label="Password"
-          type="password"
-          placeholder="Enter password"
-          error={errors.password?.message}
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          })}
-        />
-
-        <Input
-          label="Confirm Password"
-          type="password"
-          placeholder="Confirm password"
-          error={errors.confirmPassword?.message}
-          {...register("confirmPassword", {
-            required: "Confirm your password",
-            validate: (value) =>
-              value === password || "Passwords do not match",
-          })}
-        />
-
-        <Button type="submit">
-          Register
-        </Button>
-      </form>
-
-      <p className="mt-6 text-center text-sm">
-        Already have an account?{" "}
-        <Link
-          href="/login"
-          className="font-semibold text-blue-600 hover:underline"
-        >
-          Login
-        </Link>
-      </p>
-    </div>
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Registering..." : "Register"}
+      </Button>
+    </form>
   );
 }
