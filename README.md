@@ -89,18 +89,18 @@ from that genre.
 
 ## Screenshots
 
-![alt text](register.png)
-![alt text](login.png)
-![alt text](logout.png)
-![alt text](search.png)
-![alt text](search-song.png)
-![alt text](search-album.png)
-![alt text](search-artist.png)
-![alt text](add-to-library.png)
-![alt text](library.png)
-![alt text](dashboard&AI recommendation.png)
-![alt text](dashoboard-analytics.png)
-![alt text](Delete.png)
+(register.png)
+(login.png)
+(logout.png)
+(search.png)
+(search-song.png)
+(search-album.png)
+(search-artist.png)
+(add-to-library.png)
+(library.png)
+(dashboard&AI recommendation.png)
+(dashoboard-analytics.png)
+(Delete.png)
 ## Author
 
 Simran Duggal GitHub: https://github.com/simranduggal75
