@@ -1,9 +1,11 @@
 "use client";
 
 import SearchBar from "@/components/search/SearchBar";
+import ProtectedRoute from "@/components/layout/ProtectedRoute";
 
 export default function SearchPage() {
   return (
+    <ProtectedRoute>
     <main className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-10">
@@ -19,5 +21,6 @@ export default function SearchPage() {
         <SearchBar />
       </div>
     </main>
+    </ProtectedRoute>
   );
 }
